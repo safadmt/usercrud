@@ -1,0 +1,43 @@
+
+    <div class="min-vh-100  d-flex justify-content-center align-items-center " id="userloginformdiv">
+        <div class="col-md-4 col-sm-8">
+            <div>
+            <h2 class="text-center">User signup</h2>
+        </div>
+        <form action="/signup" method="post">
+            <% if(error) { %>
+            <div class="text-danger"><%= error %></div>
+            <% } %>
+            <div>
+                <label for="username" class="form-label">Username</label>
+                <input type="text" name="username" id="username" class="form-control form-control-lg"  >
+            </div>
+           
+            <div>
+                <label for="email" class="form-label">Email</label>
+                <input type="email" name="email" id="email" class="form-control form-control-lg" >
+            </div>
+            <div>
+                <label for="mobile" class="form-label">Mobile</label>
+                <input type="number" name="mobile" id="mobile" class="form-control form-control-lg" minlength="10" maxlength="10">
+            </div>
+            <div>
+                <label for="gender" class="form-label">Gender</label>
+                <select class="form-select" name="gender" aria-label="Default select example">
+                <option value="" selected>Open this select menu</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+              </select>
+            </div>
+            
+            <div>
+                <label for="password" class="form-label">Password</label>
+                <input type="password" name="password" id="password" class="form-control form-control-lg" minlength="8" maxlength="16">
+            </div>
+            <div class="mt-4">
+                <button type="submit" class="btn btn-success col-12 btn-lg">Submit</button>
+            </div>
+        </form>
+        <span >Already have an account ? please <a href="/login" class="text-primary">Login</a></span>
+        </div>
+    </div>

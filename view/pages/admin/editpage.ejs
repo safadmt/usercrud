@@ -1,0 +1,93 @@
+
+<div class="min-vh-100  d-flex justify-content-center align-items-center " id="userloginformdiv">
+    <div class="col-md-4 col-sm-8">
+        <div>
+        <a href="/admin" class="btn btn-primary mb-2">Back to Admin </a>
+        <h2 class="text-center">Edit user</h2>
+    </div>
+    <form id="updateForm" action="/admin/edit/<%= user._id %>"  enctype="application/x-www-form-urlencoded">
+       
+        <div id="errordiv" class="text-danger"></div>
+        <div id="successdiv" class="text-success"></div>
+        <div>
+            <label for="username" class="form-label">Username</label>
+            <input type="text" name="username" id="username" value="<%= user.username %>" class="form-control form-control-lg" minlength="5" >
+        </div>
+       
+        <div>
+            <label for="email" class="form-label">Email</label>
+            <input type="email" name="email" id="email" value="<%= user.email %>" class="form-control form-control-lg" >
+        </div>
+        <div>
+            <label for="mobile" class="form-label">Mobile</label>
+            <input type="number" name="mobile" id="mobile" value="<%= user.mobile %>" class="form-control form-control-lg" minlength="10" maxlength="10">
+        </div>
+        <div>
+            <label for="gender" class="form-label">Gender</label>
+            <select class="form-select" name="gender" aria-label="Default select example">
+            <option value="<%= user.gender %>" id="gender" selected><%= user.gender %></option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+          </select>
+        </div>
+        <div class="mt-4">
+            <button type="submit" class="btn btn-success col-12 btn-lg">Submit</button>
+        </div>
+    </form>
+    </div>
+</div>
+
+<script>
+    const errorDiv = document.getElementById('errordiv')
+    const updateForm = document.getElementById('updateForm')
+    const successdiv = document.getElementById('successdiv')
+
+    function clearError (element) {
+        setTimeout(() => {
+            element.textContent = ""
+        }, 4000);
+    }
+
+    updateForm.addEventListener('submit', function (e){
+        e.preventDefault()
+        
+        
+        const formData = new FormData(this)
+        
+        console.log(formData.entries())
+        const jsonObject = {};
+        for (const [key,value] of formData.entries()) {
+            jsonObject[key] = value
+        }
+        console.log(jsonObject)
+        const {username, email, mobile, gender} = jsonObject
+        if(!username.trim() || !email || !mobile || !gender) {
+            errorDiv.textContent = "Required all field"
+             clearError(errorDiv);
+             return
+        }else if (mobile.length < 8 || mobile.length > 16) {
+            errorDiv.textContent = "Mobile number length range between 8 to 16"
+             clearError(errorDiv);
+             return
+        }
+        const xhttp = new XMLHttpRequest()
+        xhttp.onload = function() {
+            let response = JSON.parse(xhttp.response)
+            if(response.error) {
+                errorDiv.textContent = response.error
+                clearError(errorDiv)
+                return
+            }
+            successdiv.textContent = "Updated successfully"
+            clearError(successdiv)
+        }
+
+        const action = updateForm.getAttribute('action')
+        const userid = action.split('/').slice(-1).join("")
+        console.log(userid)
+        xhttp.open('PUT', `http://localhost:4000/admin/edit/${userid}` ,true)
+        xhttp.setRequestHeader('Content-Type','application/json')
+        xhttp.send(JSON.stringify(jsonObject))
+    })
+   
+</script>
